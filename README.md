@@ -6,6 +6,8 @@ This repository contains step-by-step practice projects and components that I bu
 ## 📚 What I'm Learning
 
 - Basic JS
+- Function
+- Array
 
 ## 🛠 Technologies Used
 
