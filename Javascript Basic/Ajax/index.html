@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AJAX Axios</title>
+    <link rel="stylesheet" href="CSS/milligram.css">
+</head>
+<body>
+<h1>AJAX Axios</h1>
+<button onclick="createItem()">Create</button>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Description</th>
+                <th>Delete</th>
+                <th>Update</th>
+            </tr>
+        </thead>
+        <tbody id="itemList">
+
+        </tbody>
+    </table>
+
+
+<script src="JS/Axios.js"></script>
+<script>
+    getList();
+    async function getList(){
+        let result = await axios.get('http://127.0.0.1:8080/api/products');
+        if (result.status === 200){
+            let data = result.data;
+            let html = '';
+            data.forEach(element => {
+               document.getElementById('itemList').innerHTML += `
+               <tr>
+                    <td>${element.id}</td>
+                    <td>${element.name}</td>
+                    <td>${element.price}</td>
+                    <td>${element.description}</td>
+                    <td><button onclick="deleteItem(${element.id})">Delete</button></td>
+                    <td><button onclick="updateItem(${element.id})">Update</button></td>
+                </tr>
+               `
+            })
+
+        }else{
+            console.log('error');
+        }
+    }
+
+    async function deleteItem(id) {
+       let result = await axios.delete('http://127.0.0.1:8080/api/products/' + id);
+       if (result.status === 200){
+           alert('success');
+            document.getElementById('itemList').innerHTML = '';
+           getList();
+       }else if (result.status === 400){
+           alert('Data not found')
+       }else {
+           console.log('error');
+       }
+    }
+
+    async function updateItem(id){
+        window.location.href = `update.html?id=${id}`;
+    }
+
+    async function createItem(){
+        window.location.href = `create.html`;
+    }
+
+
+</script>
+
+</body>
+</html>

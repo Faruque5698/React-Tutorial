@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Update</title>
+  <link rel="stylesheet" href="CSS/milligram.css">
+</head>
+<body>
+<div  class="container">
+  <div class="row">
+    <div class="column">
+        <label for="id">Product ID</label>
+        <input type="text" name="" id="id" placeholder="Enter a product ID">
+        <label for="name">Product Name</label>
+        <input type="text" name="" id="name" placeholder="Enter a product name">
+        <label for="price">Product Price</label>
+        <input type="text" name="" id="price" placeholder="Enter a product price">
+        <label for="description">Product Description</label>
+        <textarea type="text" name="" id="description" placeholder="Enter a product description"></textarea>
+        <button onclick="updateItem()">Update</button>
+    </div>
+  </div>
+</div>
+
+<script src="JS/Axios.js"></script>
+<script>
+  getSingleData()
+  async function getSingleData(){
+    let params = new URLSearchParams(window.location.search);
+    let id = params.get('id');
+    let result = await axios.get('http://localhost:8080/api/products/'+ id);
+    if (result.status === 200) {
+      document.getElementById("id").value = result.data.id;
+      document.getElementById("name").value = result.data.name;
+      document.getElementById("price").value = result.data.price;
+      document.getElementById("description").value = result.data.description;
+    }else {
+      alert("data not found");
+    }
+  }
+
+  async function updateItem() {
+    console.log("update");
+    let name = document.getElementById("name").value;
+    let price = document.getElementById("price").value;
+    let description = document.getElementById("description").value;
+    let id = document.getElementById("id").value;
+    console.log(id);
+    let updateObject = {
+      "name": name,
+      "price": price,
+      "description": description
+    }
+    // let result = await axios.put(`http://127.0.0.1:8080/api/products/${id}`,updateObject);
+    try {
+      // PUT Request
+      let result = await axios.put(`http://127.0.0.1:8080/api/products/${id}`, updateObject);
+
+      // Success response
+      if (result.status === 200) {
+        alert("Update success");
+        window.location.href = "index.html";
+      }
+    } catch (error) {
+      console.error(error.response?.data || error);
+      alert("Error occurred during update");
+    }
+  }
+</script>
+
+</body>
+</html>
